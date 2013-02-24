@@ -1,8 +1,0 @@
-public class Symbol implements Comparable<Symbol>{
-    byte value;
-    int occr;
-    public Symbol(byte _value, int _occr){value=_value;occr=_occr;}
-    public byte getVal(){return value;}
-    public int getOccr(){return occr;}
-    int compareTo(Symbol s) {return (occr-s.getOccr());}
-  }
