@@ -12,6 +12,13 @@ public class Coder{
   final int DIFF=128;//difference between int value and byte value
   int[] ipad=null;
   int[] opad=null;
+  //key and message
+  int[] key;
+  int[] msg;
+  
+  //FUNCTIONS
+  /*Constructor with msgfile and keyfile specified.*/
+  //public Coder(String msgFile,String keyFile)
   
   /*Get unsigned cipher from unsigned plaintext*/
   //public int[] getCipher(int[] plainText);
@@ -23,10 +30,8 @@ public class Coder{
   //public int[] calcHMAC(int[] msg, int[] key)
   
   public static void main(String[] args){
-    Coder coder=new Coder();
-    int[] key=coder.getInput("key.txt");
-    int[] msg=coder.getInput("msg.txt");
-    coder.calcHMAC(msg,key);
+    Coder coder=new Coder("msg.txt","key.txt");
+    coder.calcHMAC();
   }
   
   
@@ -73,6 +78,16 @@ public class Coder{
     }
   }
   
+  public Coder(String msgFile,String keyFile){
+      ipad=new int[64];opad=new int[64];
+      for(int i=0;i<64;i++){
+          ipad[i]=0x5c;
+          opad[i]=0x36;
+      }    
+      msg=getInput(msgFile);
+      key=getInput(keyFile);
+  }
+  
   //Get unsigned cipher from unsigned plaintext
   public int[] getCipher(int[] plainText){
     if(printPlainTextAndHash){
@@ -103,12 +118,12 @@ public class Coder{
       FileInputStream file = new FileInputStream(fileName);
       Scanner in=new Scanner(file);
       ArrayList<Integer> text = new ArrayList<Integer>();
-      while (in.hasNextInt()) {
-        text.add(in.nextInt());
-      }
       if (file == null || in==null) {
         System.out.printf("  Error reading the file %s.\n",fileName);
         System.exit(0);
+      }
+      while (in.hasNextInt()) {
+        text.add(in.nextInt());
       }
       file.close();
       in.close();
@@ -123,7 +138,7 @@ public class Coder{
   }
   
   //Calculate HMAC(M,H,K)
-  public int[] calcHMAC(int[] msg, int[] key){
+  public int[] calcHMAC(){
     int[] h1=getCipher(orOfIntArrays(msg,xorOfIntArrays(key,ipad)));
     int[] h2=getCipher(orOfIntArrays(h1,xorOfIntArrays(key,opad)));
     if(printHMAC)
