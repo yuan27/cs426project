@@ -1,0 +1,26 @@
+That will be inaccurate because of cache... stuff written to disk just gets shoved into memory until the disk's ready. 30 gigs would probably fill the cache, but still, there's better ways that don't involve waiting for 30 gigs of data to be written.
+
+Linux usually has the hdparm command. It has read tests that take just a few seconds:
+Code:
+/**
+**
+hdparm -tT /dev/sda
+
+/dev/sda:
+ Timing cached reads:   1582 MB in  2.00 seconds = 791.21 MB/sec
+ Timing buffered disk reads:  184 MB in  3.04 seconds =  60.61 MB/sec
+**
+**/
+
+There's no equivalent write-speed test but, for a traditional hard disk, read speed and write speed should be about the same.
+
+
+-T     Perform timings of cache reads for benchmark and comparison pur-
+              poses.   For  meaningful  results,  this  operation  should   be
+              repeated  2-3  times  on  an otherwise inactive system (no other
+              active processes) with at least a couple of  megabytes  of  free
+              memory.   This  displays  the speed of reading directly from the
+              Linux buffer cache without disk  access.   This  measurement  is
+              essentially  an  indication  of the throughput of the processor,
+              cache, and memory of the system under test.
+
